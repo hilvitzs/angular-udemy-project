@@ -10,7 +10,7 @@
         <li routerLinkActive='active'><a routerLink='/shopping-list'>Shopping List</a></li>
       </ul>
       <ul class='nav navbar-nav navbar-right'>
-        <ng-template [ngIf]="!authService.isAuthenticated()">
+        <ng-template [ngIf]="!isAuthenticated()">
           <li><a routerLink="/signup">Register</a></li>
           <li><a routerLink="/signin">Log In</a></li>
         </ng-template>
