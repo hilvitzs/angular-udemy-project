@@ -17,7 +17,6 @@ export class DataStorageService {
               private authService: AuthService ) {}
 
   storeRecipes() {
-    const token = this.authService.getToken();
     // const headers = new HttpHeaders().set('Authorization', 'Bearer afslkdjfa;slkdjf').append() // won't work with firebase
     // return this.http.put('https://ng-recipe-app-d3fc7.firebaseio.com/recipes.json?auth=' + token, this.recipeService.getRecipes());
     // return this.httpClient.put('https://ng-recipe-app-d3fc7.firebaseio.com/recipes.json', this.recipeService.getRecipes(), {
@@ -30,14 +29,12 @@ export class DataStorageService {
         'PUT',
         'https://ng-recipe-app-d3fc7.firebaseio.com/recipes.json',
         this.recipeService.getRecipes(),
-        {reportProgress: true, params: new HttpParams().set('auth', token)}
+        {reportProgress: true}
       );
     return this.httpClient.request(req);
   }
 
   fetchRecipes() {
-    const token = this.authService.getToken();
-
     // this.http.get('https://ng-recipe-app-d3fc7.firebaseio.com/recipes.json?auth=' + token)
     //   .map((response: Response) => {
     //       const recipes: Recipe[] = response.json();
@@ -54,11 +51,12 @@ export class DataStorageService {
     //     }
     //   );
     // this.httpClient.get<Recipe[]>('https://ng-recipe-app-d3fc7.firebaseio.com/recipes.json?auth=' + token)
-    this.httpClient.get<Recipe[]>('https://ng-recipe-app-d3fc7.firebaseio.com/recipes.json?auth=' + token, {
+    this.httpClient.get<Recipe[]>('https://ng-recipe-app-d3fc7.firebaseio.com/recipes.json', {
       observe: 'body', // default
       responseType: 'json' // default
     })
       .map((recipes) => {
+        console.log(recipes);
           for (const recipe of recipes) {
             if (!recipe['ingredients']) {
               recipe['ingredients'] = [];
