@@ -4,9 +4,7 @@ import { fromPromise } from 'rxjs/observable/fromPromise';
 import { Router } from '@angular/router';
 
 import * as AuthActions from './auth.actions';
-import { map } from 'rxjs-compat/operators/map';
-import { switchMap } from 'rxjs-compat/operators/switchMap';
-import { mergeMap } from 'rxjs-compat/operators/mergeMap';
+import { map, mergeMap, switchMap } from 'rxjs/operators';
 import * as firebase from 'firebase';
 
 @Injectable()
@@ -59,6 +57,14 @@ export class AuthEffects {
           payload: token
         }
       ];
+    })
+  );
+
+  @Effect({dispatch: false})
+  authLogout = this.actions$.pipe(
+    ofType(AuthActions.LOGOUT),
+    map(() => { // should be do but does not work with compat
+      this.router.navigate(['/']);
     })
   );
 
