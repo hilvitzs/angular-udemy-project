@@ -14,11 +14,12 @@ export class RecipeEffects {
   recipeFetch = this.actions$.pipe(
     ofType(RecipeActions.FETCH_RECIPES),
     switchMap((action: RecipeActions.FetchRecipes) => {
-      return this.httpClient.get<Recipe[]>('https://ng-recipe-app-d3fc7.firebaseio.com/recipes.json', {
+      return this.httpClient.get<Recipe[]>('https://ng-recipe-book-3adbb.firebaseio.com/recipes.json', {
         observe: 'body',
         responseType: 'json'
-      })
-      .map((recipes) => {
+      });
+    }), map(
+      (recipes) => {
         console.log(recipes);
         for (const recipe of recipes) {
           if (!recipe['ingredients']) {
@@ -29,24 +30,20 @@ export class RecipeEffects {
           type: RecipeActions.SET_RECIPES,
           payload: recipes
         };
-      });
-    })
-  );
+      }
+    ));
 
   @Effect({dispatch: false})
   recipeStore = this.actions$.pipe(
     ofType(RecipeActions.STORE_RECIPES),
     withLatestFrom(this.store.select('recipes')),
-    switchMap(([action, state]) => {
-      const req = new HttpRequest(
-        'PUT',
-        'https://ng-recipe-app-d3fc7.firebaseio.com/recipes.json',
-        state.recipes,
-        {reportProgress: true}
-      );
-    return this.httpClient.request(req);
-    })
-  );
+      switchMap(([action, state]) => {
+        const req = new HttpRequest(
+          'PUT',
+          'https://ng-recipe-book-3adbb.firebaseio.com/recipes.json',
+          state.recipes, {reportProgress: true});
+        return this.httpClient.request(req);
+      }));
 
   constructor(private actions$: Actions,
               private httpClient: HttpClient,
